@@ -17,21 +17,23 @@ let userSchema = new mongoose.Schema({
         type:String,
         required:true,
         trim:true
+    },
+    refreshToken:{
+        type:String,
     }
 })
 
-userSchema.pre("save",function(next){
-    if (!this.isModified("password")) return next();
+userSchema.pre("save",function(){
+    if (!this.isModified("password")) return console.log('password ');
     try {
         return this.password = bcrypt.hashSync(this.password,10)
     } catch (error) {
-        next(error)
+        console.log(error)
     }
 })
 
 userSchema.methods.comparePassword = function(password){
-    let res = bcrypt.compareSync(password,this.password)
-    return res
+    return bcrypt.compareSync(password,this.password)
 }
 
 let UserModel = mongoose.model("users",userSchema);
