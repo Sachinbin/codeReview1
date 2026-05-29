@@ -30,7 +30,8 @@ userSchema.pre("save",function(){
     } catch (error) {
         console.log(error)
     }
-})
+}
+,{ timestamps: true })
 
 userSchema.methods.comparePassword = function(password){
     return bcrypt.compareSync(password,this.password)
