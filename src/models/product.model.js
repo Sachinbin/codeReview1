@@ -22,8 +22,9 @@ let productSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User", // This must match the name you gave your User model
-        required: true
     }
 }, { timestamps: true }); // Adding timestamps is highly recommended for products
 
-module.exports = mongoose.model("Product", productSchema);
+
+let ProductModel = mongoose.model("Products", productSchema);
+module.exports = ProductModel;
