@@ -1,4 +1,4 @@
-const { createProductService } = require("../services/product.service")
+const { createProductService, getProductService, updateProductService } = require("../services/product.service")
 const ApiResponse = require("../utils/apiResponse")
 const asyncHnadler = require("../utils/asyncHnadler")
 
@@ -15,23 +15,27 @@ let createProductController = asyncHnadler(async (req, res) => {
 }
 )
 
-// let loginController = asyncHnadler(async (req, res) => {
-//     let data = req.body
-//     let user = await loginService(data)
+let getProductController = asyncHnadler(async (req, res) => {
+    let user = req.user
+    let product = await getProductService(user)
+    return res.status(200).json(new ApiResponse('all products',product))
+}
+)
 
-//     let accessToken = await generateAccessToken(user._id)
-//     let refreshToken = await generateRefreshToken(user._id)
+let updateProductController = asyncHnadler(async (req,res) => {
+    let data = req.body
+    let {id} = req.params;
+    let user = req.user
+    
+    let updatedProduct = await updateProductService(data,id,user)
 
-//     user.refreshToken = refreshToken
-//     await user.save()
+     return res.status(201).json(new ApiResponse('product updated successfuly',newProduct))
+})
 
-//     res.cookie("accessToken",accessToken)
-//     res.cookie("refreshToken",refreshToken)
 
-//     return res.status(200).json(new ApiResponse('user Logged In successfuly',user))
-// }
-// )
 
 module.exports = {
-    createProductController
+    createProductController,
+    getProductController,
+    updateProductController,
 }

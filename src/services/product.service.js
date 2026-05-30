@@ -3,42 +3,60 @@ const ProductModel = require('../models/product.model')
 
 
 let createProductService = async (data) => {
-    let {name,description,price,image,category} = data
+    let { name, description, price, image, category } = data
 
-    if(!name || !price ){
-        throw new ApiError(400,'All fields are requird')
+    if (!name || !price) {
+        throw new ApiError(400, 'All fields are requird')
     }
 
     let newProduct = await ProductModel.create({
-        name,description,price,image,category,
+        name, description, price, image, category,
     })
 
     return newProduct;
 
 }
 
-// let loginService = async (data) => {
-//     let {email,password} = data
+let getProductService = async (user) => {
+    if (!user) {
+        throw new ApiError(400, 'Invalied request')
+    }
+    let products = await ProductModel.find({ userId: user.id })
 
-//     if(!email || !password ){
-//         throw new ApiError(400,'All fields are requird')
-//     }
-//     let user = await UserModel.findOne({email})
+    if (!products) {
+        throw new ApiError(401, 'product not found')
+    }
 
-//     if(!user){
-//         throw new ApiError(404,'User not found')
-//     }
+    return products
+}
 
-//     let isMatch = await user.comparePassword(password)
+let updateProductService = async (data, id,user) => {
+   
+    let { name, description, price, image, category } = data
 
-//     if(!isMatch){
-//         throw new ApiError(401,"Invalid credentials")
-//     }
-
-//     return user;
-
-// }
+    if (!name || !price) {
+        throw new ApiError(400, 'All fields are requird')
+    }
+    
+    
+    let updatedProduct = await ProductModel.findByIdAndUpdate(
+        id,
+        {
+           name, 
+           description, 
+           price, 
+           image, 
+           category 
+        },
+        {
+            new:true
+        }
+    )
+    return products
+}
 
 module.exports = {
-   createProductService
+    createProductService,
+    getProductService,
+    updateProductService
 }
