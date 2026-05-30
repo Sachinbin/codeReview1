@@ -37,8 +37,15 @@ let updateProductService = async (data, id,user) => {
     if (!name || !price) {
         throw new ApiError(400, 'All fields are requird')
     }
+    let product = await ProductModel.findById(id)
+
     
-    
+    if(product.userId.toString() !== user._id.toString()){
+        console.log(product.userId)
+        console.log(user._id)
+        throw new ApiError(403, 'You are not authorized to update this product')
+    }
+
     let updatedProduct = await ProductModel.findByIdAndUpdate(
         id,
         {
@@ -49,14 +56,29 @@ let updateProductService = async (data, id,user) => {
            category 
         },
         {
-            new:true
+            new:true,
+            runValidators:true
         }
     )
-    return products
+    return updatedProduct
+}
+
+let deleteProductService = async (id,user) => {
+   
+    let product = await ProductModel.findById(id)
+
+    if(product.userId.toString() !== user._id.toString()){
+        throw new ApiError (403,"you are not authorized user to detete this product")
+    }
+
+    let deletedProduct = await ProductModel.findByIdAndDelete(id)
+
+    return deletedProduct
 }
 
 module.exports = {
     createProductService,
     getProductService,
-    updateProductService
+    updateProductService,
+    deleteProductService,
 }

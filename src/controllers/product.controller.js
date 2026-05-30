@@ -1,4 +1,4 @@
-const { createProductService, getProductService, updateProductService } = require("../services/product.service")
+const { createProductService, getProductService, updateProductService, deleteProductService } = require("../services/product.service")
 const ApiResponse = require("../utils/apiResponse")
 const asyncHnadler = require("../utils/asyncHnadler")
 
@@ -29,7 +29,17 @@ let updateProductController = asyncHnadler(async (req,res) => {
     
     let updatedProduct = await updateProductService(data,id,user)
 
-     return res.status(201).json(new ApiResponse('product updated successfuly',newProduct))
+     return res.status(201).json(new ApiResponse('product updated successfuly',updatedProduct))
+})
+
+
+let deleteProductController = asyncHnadler(async (req,res) => {
+    let {id} = req.params;
+    let user = req.user
+    
+    let deletedProduct = await deleteProductService(id,user)
+
+     return res.status(201).json(new ApiResponse('product deleted successfuly',deletedProduct))
 })
 
 
@@ -38,4 +48,5 @@ module.exports = {
     createProductController,
     getProductController,
     updateProductController,
+    deleteProductController
 }
