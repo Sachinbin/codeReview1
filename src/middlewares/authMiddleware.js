@@ -2,6 +2,7 @@ const UserModel = require("../models/user.model")
 const ApiError = require("../utils/apiError")
 const jwt = require('jsonwebtoken')
 
+//authonticate the request
 let authMiddleware = async (req,res,next) => {
     let accessToken = req.cookies.accessToken
 
